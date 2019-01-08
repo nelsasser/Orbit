@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Orbit</title>
+
+	<link rel="stylesheet" href="css/main.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
+	<script type="text/javascript" src="js/simulator.js"></script>
+	<script type="text/javascript" src="js/simulator_renderer.js"></script>
+	<script type="text/javascript" src="js/visualizer.js"></script>
+	<script type="text/javascript" src="js/editor.js"></script>
+</head>
+<body>
+	<!--Where the simulation will be visualized-->
+	<div id="simulator_window"></div>
+	<div id="quick_controls">
+		<ul>
+			<li>
+				<div class="control_button tooltip" id="play_control">
+					<span class="tooltiptext">Resume simulation.</span>
+					<svg class="control_icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 420 420">
+						<g>
+							<path d="M210,21c104.216,0,189,84.784,189,189s-84.784,189-189,189S21,314.216,21,210S105.784,21,210,21 M210,0
+							C94.031,0,0,94.024,0,210s94.031,210,210,210s210-94.024,210-210S325.969,0,210,0L210,0z"/>
+							<path d="M293.909,187.215l-111.818-73.591C162.792,100.926,147,109.445,147,132.545V287.42c0,23.1,15.813,31.647,35.147,18.998
+							L293.86,233.31C313.187,220.647,313.208,199.913,293.909,187.215z M279.006,217.868l-99.295,64.981
+							c-6.44,4.221-11.711,1.372-11.711-6.328V143.437c0-7.7,5.264-10.535,11.697-6.3l99.33,65.366
+							C285.46,206.731,285.453,213.647,279.006,217.868z"/>
+						</g>
+					</svg>
+				</div>
+				<div class="control_button tooltip" id="pause_control">
+					<span class="tooltiptext">Pause simulation.</span>
+					<svg class="control_icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 420 420" >
+						<g>
+							<path d="M210,21c104.216,0,189,84.784,189,189s-84.784,189-189,189S21,314.216,21,210S105.784,21,210,21 M210,0
+								C94.031,0,0,94.024,0,210s94.031,210,210,210s210-94.024,210-210S325.969,0,210,0L210,0z"/>
+							<g>
+								<path d="M259,108.941c-19.25,0-35,15.75-35,35v132.125c0,19.25,15.75,35,35,35s35-15.75,35-35V143.941
+									C294,124.691,278.25,108.941,259,108.941z M273,276.066c0,7.7-6.3,14-14,14s-14-6.3-14-14V143.941c0-7.7,6.3-14,14-14
+									s14,6.3,14,14V276.066z"/>
+								<path d="M161,108.941c-19.25,0-35,15.75-35,35v132.125c0,19.25,15.75,35,35,35s35-15.75,35-35V143.941
+									C196,124.691,180.25,108.941,161,108.941z M175,276.066c0,7.7-6.3,14-14,14s-14-6.3-14-14V143.941c0-7.7,6.3-14,14-14
+									s14,6.3,14,14V276.066z"/>
+							</g>
+						</g>
+					</svg>
+				</div>
+			</li>
+			<li>
+				<div class="control_button tooltip" id="step_control_on">
+					<span class="tooltiptext">Step forward one frame.</span>
+					<svg class="control_icon" id="step_on" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" xmlns:xlink="http://www.w3.org/1999/xlink">
+					  <g>
+					    <path d="m40.4,121.3c-0.8,0.8-1.8,1.2-2.9,1.2s-2.1-0.4-2.9-1.2c-1.6-1.6-1.6-4.2 0-5.8l51-51-51-51c-1.6-1.6-1.6-4.2 0-5.8 1.6-1.6 4.2-1.6 5.8,0l53.9,53.9c1.6,1.6 1.6,4.2 0,5.8l-53.9,53.9z"/>
+					  </g>
+					</svg>
+				</div>	
+				<div class="control_button tooltip" id="step_control_off">
+					<span class="tooltiptext">Cannot step unless paused.</span>
+					<svg class="control_icon" id="step_off" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" xmlns:xlink="http://www.w3.org/1999/xlink">
+					  <g>
+					    <path d="m40.4,121.3c-0.8,0.8-1.8,1.2-2.9,1.2s-2.1-0.4-2.9-1.2c-1.6-1.6-1.6-4.2 0-5.8l51-51-51-51c-1.6-1.6-1.6-4.2 0-5.8 1.6-1.6 4.2-1.6 5.8,0l53.9,53.9c1.6,1.6 1.6,4.2 0,5.8l-53.9,53.9z"/>
+					  </g>
+					</svg>
+				</div>	
+			</li>
+			<li>
+				<div class="control_button tooltip" id="reset_sim">
+					<span class="tooltiptext">Reset simulation.</span>
+					<svg class="control_icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" xmlns:xlink="http://www.w3.org/1999/xlink">
+					  <g>
+					    <path d="m29.076,61.093c1.121,0 2.03-0.909 2.03-2.03 0-1.12-0.909-2.03-2.03-2.03-13.754,0-24.945-11.191-24.945-24.946 0-13.756 11.191-24.947 24.945-24.947 13.758,0 24.948,11.191 24.95,25.031 0.003,0.056 0.155,4.327-1.101,8.506l-1.873-4.637c-0.42-1.038-1.602-1.537-2.642-1.122-1.04,0.42-1.542,1.603-1.122,2.643l3.643,9.019c0.025,0.062 0.068,0.112 0.097,0.17 0.017,0.029 0.015,0.063 0.032,0.092 0.023,0.04 0.057,0.067 0.081,0.105 0.052,0.075 0.106,0.146 0.166,0.214 0.063,0.07 0.128,0.135 0.199,0.195 0.064,0.055 0.13,0.103 0.2,0.149 0.08,0.053 0.162,0.098 0.25,0.139 0.074,0.035 0.148,0.065 0.227,0.091 0.094,0.032 0.189,0.052 0.287,0.069 0.049,0.009 0.094,0.03 0.144,0.035 0.032,0.003 0.064-0.005 0.097-0.004 0.035,0.002 0.069,0.013 0.105,0.013 0.062,0 0.125-0.018 0.188-0.024 0.08-0.008 0.159-0.014 0.237-0.031 0.098-0.02 0.188-0.055 0.282-0.091 0.077-0.028 0.152-0.055 0.225-0.093 0.029-0.015 0.061-0.02 0.088-0.037l9.158-5.337c0.967-0.564 1.293-1.807 0.73-2.775-0.564-0.968-1.811-1.294-2.777-0.731l-3.906,2.278c1.199-4.53 1.053-8.723 1.043-8.918 0-15.995-13.012-29.007-29.008-29.007-15.992,0-29.005,13.012-29.005,29.007 9.14546e-15,15.993 13.013,29.004 29.005,29.004z"/>
+					  </g>
+					</svg>
+				</div>
+			</li>
+			<li>
+				<div class="control_button tooltip" id="load_file">
+					<span class="tooltiptext">Open example.</span>
+					<svg class="control_icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 545.027 545.027">
+						<g>
+							<path d="M540.743,281.356c-4.179-8.754-10.568-15.464-19.123-20.12c-8.566-4.665-17.987-6.995-28.264-6.995h-54.819v-45.683
+								c0-17.511-6.283-32.548-18.843-45.111c-12.566-12.562-27.604-18.842-45.111-18.842H219.268v-9.136
+								c0-17.511-6.283-32.548-18.842-45.107c-12.564-12.562-27.6-18.846-45.111-18.846H63.953c-17.511,0-32.548,6.283-45.111,18.846
+								C6.28,102.922,0,117.959,0,135.47v274.088c0,17.508,6.28,32.545,18.842,45.104c12.563,12.565,27.6,18.849,45.111,18.849h310.636
+								c12.748,0,26.07-3.285,39.971-9.855c13.895-6.563,24.928-14.894,33.113-24.981L531.9,335.037
+								c8.754-11.037,13.127-22.453,13.127-34.26C545.031,293.923,543.603,287.458,540.743,281.356z M36.547,135.474
+								c0-7.611,2.663-14.084,7.993-19.414c5.326-5.327,11.799-7.993,19.414-7.993h91.365c7.615,0,14.084,2.663,19.414,7.993
+								c5.327,5.33,7.993,11.803,7.993,19.414v18.274c0,7.616,2.667,14.087,7.994,19.414s11.798,7.994,19.412,7.994h164.452
+								c7.611,0,14.089,2.666,19.418,7.993c5.324,5.326,7.99,11.799,7.99,19.414v45.682H182.725c-12.941,0-26.269,3.284-39.973,9.851
+								c-13.706,6.567-24.744,14.893-33.12,24.986l-73.085,89.931V135.474z M503.345,311.917l-83.939,103.637
+								c-4.753,5.899-11.512,10.943-20.272,15.125c-8.754,4.189-16.939,6.283-24.551,6.283H63.953c-10.088,0-15.131-3.333-15.131-9.992
+								c0-3.046,1.713-6.852,5.14-11.427l83.938-103.633c4.949-5.903,11.75-10.896,20.413-14.989c8.658-4.093,16.796-6.14,24.411-6.14
+								h310.631c10.088,0,15.129,3.333,15.129,9.993C508.485,304.019,506.778,307.728,503.345,311.917z"/>
+						</g>
+					</svg>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="modal" id="file_select_modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<div class="modal_section">Choose Simulation:</div>
+			<div class="selections">
+				<ul>
+					<li>
+						<div class="example_select" id="simple">Simple Orbit
+							<p class="example_select_desc">Simple Sun-Earth circular orbit.</p>
+						</div>
+					</li>
+					<li>
+						<div class="example_select" id="bary">Barycentric Orbit
+							<p class="example_select_desc">Two planets orbiting around common center of mass.</p>
+						</div>
+					</li>
+					<li>
+						<div class="example_select" id="ellipse">Elliptical Orbit
+							<p class="example_select_desc">Non-circular, Kepler's Law following, Sun-Earth orbit.</p>
+						</div>
+					</li>
+					<li>
+						<div class="example_select" id="tri">Sun, Earth, and Moon
+							<p class="example_select_desc">Simple Sun-Earth orbit with extra Moon orbiting earth.</p>
+						</div>
+					</li>
+					<li>
+						<div class="example_select" id="solar">Solar System
+							<p class="example_select_desc">4 planets orbiting around Sun, with a moon orbiting a planet.</p>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid_cont">
+			<div class="description">
+			<p>
+				Welcome to Orbit! A planetary motion simulator built on a <i>mostly</i> realistic physics model using Newton's Law of Universal Gravitation coupled with a custom 3D renderer to visualize the simulation. The simulation can be paused at any point using the button on the top left. If the simulation if paused then you can step through the simulation one frame at a time using the arrow below the pause/play button. To reset the simulation, press the reset button. Use WASD to fly the camera around the scene, the arrow keys to rotate the camera, Q+E to pan the camera up and down, and R to reset the camera to the original position.
+			</p>
+		</div>
+		<div class="sim_ui">
+				
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var ss = JSON.parse('[{"x":0,"y":0,"vx":0,"vy":0,"ax":0,"ay":0,"mass":5000000000,"radius":50,"color":13514017},{"x":500,"y":0,"vx":0,"vy":25,"ax":0,"ay":0,"mass":1000000,"radius":15,"color":3369407}]');
+
+		var barycent = JSON.parse('[{"x":-250,"y":0,"vx":0,"vy":-20,"ax":0,"ay":0,"mass":5000000000,"radius":50,"color":13514017},{"x":250,"y":0,"vx":0,"vy":20,"ax":0,"ay":0,"mass":5000000000,"radius":50,"color":3369407}]');
+
+		var ellip = JSON.parse('[{"x":0,"y":0,"vx":0,"vy":0,"ax":0,"ay":0,"mass":90000000,"radius":50,"color":13514017},{"x":100,"y":0,"vx":0,"vy":10,"ax":0,"ay":0,"mass":10000,"radius":15,"color":8006206}]');
+
+		var tris = JSON.parse('[{"x":0,"y":0,"vx":0,"vy":0,"ax":0,"ay":0,"mass":5000000000,"radius":50,"color":13514017},{"x":750,"y":0,"vx":0,"vy":15,"ax":0,"ay":0,"mass":5500000,"radius":20,"color":3369407},{"x":700,"y":0,"vx":0,"vy":17.2,"ax":0,"ay":0,"mass":100000,"radius":12,"color":9147038}]');
+
+		var solarsys = JSON.parse('[{"x":0,"y":0,"vx":0,"vy":0,"ax":0,"ay":0,"mass":800000000,"radius":50,"color":13514017},{"x":1000,"y":0,"vx":0,"vy":3.4,"ax":0,"ay":0,"mass":1000000,"radius":15,"color":3369407},{"x":970,"y":0,"vx":0,"vy":4.05,"ax":0,"ay":0,"mass":1000,"radius":12,"color":9147038},{"x":250,"y":0,"vx":0,"vy":7,"ax":0,"ay":0,"mass":0.00001,"radius":20,"color":8006206},{"x":500,"y":0,"vx":0,"vy":5,"ax":0,"ay":0,"mass":0.0001,"radius":20,"color":12888680},{"x":1400,"y":0,"vx":0,"vy":2.75,"ax":0,"ay":0,"mass":0.0001,"radius":15,"color":16731136}]');
+	</script>
+
+	<script type="text/javascript">
+		var test = tris;
+
+		window.onkeyup = function(e) { keys[e.key] = false; }
+		window.onkeydown = function(e) { keys[e.key] = true; }
+		window.addEventListener("keydown", function(e) {
+		    // space and arrow keys
+		    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+		        e.preventDefault();
+		    }
+		}, false);
+
+		const camera_speed = 10;
+
+		const keys = {
+				w: false,
+				a: false,
+				s: false,
+				d: false,
+				q: false,
+				e: false,
+				r: false,
+
+				ArrowUp: false,
+				ArrowDown: false,
+				ArrowLeft: false,
+				ArrowRight: false
+			}
+
+		var pause_control = document.getElementById("pause_control");
+		var play_control = document.getElementById("play_control");
+		var step_control_on = document.getElementById("step_control_on");
+		var step_control_off = document.getElementById("step_control_off");
+		var reset_control = document.getElementById("reset_sim");
+
+		pause_control.onclick = function() {
+			pause_control.style.display = "none";
+			play_control.style.display = "block";
+			step_control_off.style.display = "none";
+			step_control_on.style.display = "block";
+			simulation.pause();
+			//console.log("pause");
+			editor.toggleInput();
+		}
+		play_control.onclick = function() {
+			pause_control.style.display = "block";
+			play_control.style.display = "none";
+			step_control_off.style.display = "block";
+			step_control_on.style.display = "none";
+			simulation.play();
+			//console.log("play");
+			editor.toggleInput();
+		}
+
+		step_control_on.onclick = function() {
+			renderer.stepFrame();
+		}
+
+		reset_control.onclick = function() {
+			simulation.reset();
+		}
+
+		function animate() {
+			if(keys['w']) {
+				camera.translateZ(-camera_speed);
+			}
+
+			if(keys['a']) {
+				camera.translateX(-camera_speed);
+			}
+
+			if(keys['s']) {
+				camera.translateZ(camera_speed);
+			}
+
+			if(keys['d']) {
+				camera.translateX(camera_speed);
+			}
+
+			if(keys['q']) {
+				camera.translateY(-camera_speed);
+			}
+
+			if(keys['e']) {
+				camera.translateY(camera_speed);
+			}
+
+			if(keys['ArrowUp']) {
+				camera.rotateX(-.05);
+			}
+
+			if(keys['ArrowDown']) {
+				camera.rotateX(.05);
+			}
+
+			if(keys['ArrowLeft']) {
+				camera.rotateY(.05);
+			}
+
+			if(keys['ArrowRight']) {
+				camera.rotateY(-.05);
+			}
+
+			if(keys['r']) {
+				resetCamera();
+			}
+			requestAnimationFrame(animate);
+			renderer.render();
+
+			if(!simulation.isPaused()) {
+				editor.update();
+			} else {
+				if(!simulation.stepped) {
+					var sub = document.getElementsByClassName('sub_editor');
+					for(var i = 0; i < sub.length; i++) {
+						var data = sub[i].getElementsByClassName('planet_data');
+						for(var j = 0; j < data.length; j++) {
+							var inputs = data[j].getElementsByClassName('sub_editor_input');
+
+							for(var k = 0; k < inputs.length; k++) {
+								if(j == 0) {
+									if(k == 0) {
+										simulation.planets[i].position.x = parseFloat(inputs[k].value);
+									} else if(k == 1) {
+										simulation.planets[i].position.y = parseFloat(inputs[k].value);
+									} else if (k == 2) {
+										simulation.planets[i].position.z = parseFloat(inputs[k].value);
+									}
+								} else if (j == 1) {
+									if(k == 0) {
+										simulation.planets[i].velocity.x = parseFloat(inputs[k].value);
+									} else if(k == 1) {
+										simulation.planets[i].velocity.y = parseFloat(inputs[k].value);
+									} else if (k == 2) {
+										simulation.planets[i].velocity.z = parseFloat(inputs[k].value);
+									}
+								} else if (j == 2) {
+									if(k == 0) {
+										simulation.planets[i].acceleration.x = parseFloat(inputs[k].value);
+									} else if(k == 1) {
+										simulation.planets[i].acceleration.y = parseFloat(inputs[k].value);
+									} else if (k == 2) {
+										simulation.planets[i].acceleration.z = parseFloat(inputs[k].value);
+									}
+								}
+							}
+						}
+					}
+				} else {
+					editor.update();
+					simulation.stepped = false
+				}
+			}
+		}
+
+		function resetCamera(){
+			camera.position.x = 0;
+			camera.position.y = 0;
+			camera.rotation.x = 0;
+			camera.rotation.y = 0;
+			camera.rotation.z = 0;
+			camera.position.z = zoom;
+		}
+
+		var gravity_modifier = 1000000;
+		var simulation = new Simulation(gravity_modifier); 
+		simulation.init(test);
+
+
+		var windowDiv = document.getElementById('simulator_window');
+		var fov = 75;
+		var near_clipping = 0.1;
+		var far_clipping = 10000;
+		var camera = new THREE.PerspectiveCamera(fov, windowDiv.clientWidth / windowDiv.clientHeight, near_clipping, far_clipping);
+
+		var renderer = new SimulationRenderer(simulation, camera, document.getElementById("simulator_window"));
+		renderer.init();
+
+		var zoom = 1500;
+		resetCamera();
+
+		renderer.render();
+
+		var editor = new Editor(simulation, document.getElementsByClassName('sim_ui')[0]);
+		editor.init();
+
+		animate();
+	</script>
+
+	<!--Scene loading and saving code-->
+
+	<script type="text/javascript">
+		// Get the modal
+		var modal = document.getElementById('file_select_modal');
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+
+		// When the user clicks on the button, open the modal 
+		document.getElementById("load_file").onclick = function() {
+		    modal.style.display = "block";
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+		    modal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+		    if (event.target == modal) {
+		        modal.style.display = "none";
+		    }
+		}
+
+
+		var simple = document.getElementById('simple');
+		var bary = document.getElementById('bary');
+		var ellipse = document.getElementById('ellipse');
+		var tri = document.getElementById('tri');
+		var solar = document.getElementById('solar');
+
+		simple.onclick = function() {
+			simulation.init(ss/*Simulation.importScene('example/simple.orbit'*/);
+
+			var w = document.getElementById("simulator_window");
+				while (w.firstChild) {
+    			w.removeChild(w.firstChild);
+			}
+
+			renderer = new SimulationRenderer(simulation, camera, document.getElementById("simulator_window"));
+			renderer.init();
+			modal.style.display = "none";
+
+			editor.delete();
+			editor = new Editor(simulation, document.getElementsByClassName('sim_ui')[0]);
+			editor.init();
+		}
+
+		bary.onclick = function() {
+			simulation.init(barycent/*Simulation.importScene('example/barycentric.orbit''')*/);
+
+			var w = document.getElementById("simulator_window");
+				while (w.firstChild) {
+    			w.removeChild(w.firstChild);
+			}
+
+			renderer = new SimulationRenderer(simulation, camera, document.getElementById("simulator_window"));
+			renderer.init();
+			modal.style.display = "none";
+
+			editor.delete();
+			editor = new Editor(simulation, document.getElementsByClassName('sim_ui')[0]);
+			editor.init();
+		}
+
+		ellipse.onclick = function() {
+			simulation.init(ellip/*Simulation.importScene('example/ellipical.orbit')*/);
+			console.log('hhh');
+
+			var w = document.getElementById("simulator_window");
+				while (w.firstChild) {
+    			w.removeChild(w.firstChild);
+			}
+
+			renderer = new SimulationRenderer(simulation, camera, document.getElementById("simulator_window"));
+			renderer.init();
+			modal.style.display = "none";
+
+			editor.delete();
+			editor = new Editor(simulation, document.getElementsByClassName('sim_ui')[0]);
+			editor.init();
+		}
+
+		tri.onclick = function() {
+			simulation.init(tris/*Simulation.importScene('example/tri.orbit')*/);
+
+			var w = document.getElementById("simulator_window");
+				while (w.firstChild) {
+    			w.removeChild(w.firstChild);
+			}
+
+			renderer = new SimulationRenderer(simulation, camera, document.getElementById("simulator_window"));
+			renderer.init();
+			modal.style.display = "none";
+
+			editor.delete();
+			editor = new Editor(simulation, document.getElementsByClassName('sim_ui')[0]);
+			editor.init();
+		}
+
+		solar.onclick = function() {
+			simulation.init(solarsys/*Simulation.importScene('example/solar_system.orbit'')*/);
+
+			var w = document.getElementById("simulator_window");
+				while (w.firstChild) {
+    			w.removeChild(w.firstChild);
+			}
+
+			renderer = new SimulationRenderer(simulation, camera, document.getElementById("simulator_window"));
+			renderer.init();
+			modal.style.display = "none";
+
+			editor.delete();
+			editor = new Editor(simulation, document.getElementsByClassName('sim_ui')[0]);
+			editor.init();
+		}
+	</script>
+
+	<!--Editor creation code-->
+
+	<script type="text/javascript">
+		
+	</script>
+
+	<footer>
+		<div class="grid_container">
+				<div class="footer_link"><a href="../index.html">Home</a></div>
+			<div class="footer_link"><a href="">Simulation Github</a></div>
+			<div class="footer_link"><a href="">Renderer Github</a></div>
+		</div>
+	</footer>
+</body>
+</html>
